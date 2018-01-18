@@ -37,21 +37,17 @@ class NegociacaoController {
     importaNegociacoes() {
         let negociacaoService = new NegociacaoService();
 
-        // Colocamos as promises na ordem que devem ser executadas
-        // precisa ser a chamada da promise e não somente a função
-        Promise.all([
-            negociacaoService.obterNegociacoesDaSemana(),
-            negociacaoService.obterNegociacoesDaSemanaAnterior(),
-            negociacaoService.obterNegociacoesDaSemanaRetrasada()
-        ]).then((arrayDeArraysDeNegociacoes) => { // Recebemos Um array com 3 arrays dentro (um pra cada promise resolvida)
-            arrayDeArraysDeNegociacoes
-                .reduce((arrayDeNegociacoes, array) => arrayDeNegociacoes.concat(array), []) // Utilizamos a reduce para concatenar os 3 arrays em um só
-                .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+        // Padrão 'Error First'
+        negociacaoService.obterNegociacoesDaSemana((err, negociacoes) => {
+            if (err) {
+                this._mensagem.texto = err;
+                return;
+            }
 
-            this._mensagem.texto = 'Negociações importadas com sucesso';
+            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
 
+            this._mensagem.texto = "Negociações importadas com sucesso.";
         });
-        //.catch(error => this._mensagem.texto = error);
     }
 
     _criaNegociacao() {
