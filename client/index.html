@@ -6,7 +6,22 @@
     <title>Negociações</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <script>
+        // Esse código abaixo é um Polyfill 
+        // Um script que emula o comportamento de um recurso quando esse não é suportado para garantir que nosso código funcione sem termos que abdicar do que é mais novo
+        // O Edge nas versões anteriores não possuía o metodo "includes", portanto, caso a versão usada não exista 
+        // nós iremos adicioná-lo
+        if (!Array.prototype.includes) {
 
+            // Se não existir, adiciona
+
+            console.log('Polyfill para Array.includes aplicado.');
+
+            Array.prototype.includes = function (elemento) {
+                return this.indexOf(elemento) != -1;
+            };
+        }
+    </script>
 </head>
 
 <body class="container">
@@ -61,7 +76,10 @@
     <script src="js/app/services/HttpService.js"></script>
     <script src="js/app/helpers/Bind.js"></script>
     <script>
-        let negociacaoController = new NegociacaoController();
+        // Poderíamos usar let, entretanto, nesse ponto estamos num escopo global e não existe um bloco
+        // Portanto, browsers como o safari consideram a declaração com let inválida, por isso usamos o var!
+        // let negociacaoController = new NegociacaoController();
+        var negociacaoController = new NegociacaoController();
     </script>
     <script>
         // Exemplo de aplicação de proxy
@@ -90,6 +108,24 @@
         // });
 
         // lista.adiciona(new Negociacao(new Date(), 1, 100));
+
+
+        // Exemplo de ordenação
+        // class Venda { constructor(data, quantidade, valor) { this._data = data; this._quantidade = quantidade; this._valor = valor; } }
+
+        // let vendas = [
+        //     new Venda(new Date(2018, 0, 20), 12, 240),
+        //     new Venda(new Date(2018, 0, 18), 10, 200),
+        //     new Venda(new Date(2018, 0, 21), 9, 180)
+        // ];
+
+        // // Crescente
+        // vendas.sort((a, b) => a._quantidade - b._quantidade);
+        // console.log(vendas);
+
+        // // Decrescente
+        // vendas.sort((a, b) => b._quantidade - a._quantidade);
+        // console.log(vendas);
     </script>
 </body>
 
